@@ -1,6 +1,7 @@
 package com.ll.restapi.service;
 
 import com.ll.restapi.dto.request.TodoCreateRequest;
+import com.ll.restapi.dto.request.TodoUpdateRequest;
 import com.ll.restapi.dto.response.TodoResponse;
 import com.ll.restapi.entity.Todo;
 import com.ll.restapi.repository.TodoRepository;
@@ -40,6 +41,24 @@ public class TodoServiceImpl implements TodoService {
     @Override
     public TodoResponse findById(Long id) {
         Todo todo = todoRepository.findById(id).orElseThrow();
+        return TodoResponse.from(todo);
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        if(!todoRepository.existsById(id)) {
+            throw  new RuntimeException();
+        }
+        todoRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public TodoResponse update(Long id, TodoUpdateRequest request) {
+        Todo todo = todoRepository.findById(id).orElseThrow();
+        todo.update(request.getTitle(), request.getContent());
+
         return TodoResponse.from(todo);
     }
 }
