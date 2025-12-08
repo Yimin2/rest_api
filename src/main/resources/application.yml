@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: restapi
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    password:
+    username: sa
+
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
