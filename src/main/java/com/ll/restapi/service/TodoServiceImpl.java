@@ -8,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class TodoServiceImpl implements TodoService{
+public class TodoServiceImpl implements TodoService {
 
     private final TodoRepository todoRepository;
 
@@ -25,5 +27,19 @@ public class TodoServiceImpl implements TodoService{
         Todo saved = todoRepository.save(todo);
 
         return TodoResponse.from(saved);
-     }
+    }
+
+    @Override
+    public List<TodoResponse> findAll() {
+        return todoRepository.findAll()
+                .stream()
+                .map(TodoResponse::from)
+                .toList();
+    }
+
+    @Override
+    public TodoResponse findById(Long id) {
+        Todo todo = todoRepository.findById(id).orElseThrow();
+        return TodoResponse.from(todo);
+    }
 }
