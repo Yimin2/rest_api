@@ -4,11 +4,13 @@ import com.ll.restapi.dto.request.TodoCreateRequest;
 import com.ll.restapi.dto.request.TodoUpdateRequest;
 import com.ll.restapi.dto.response.ApiResponse;
 import com.ll.restapi.dto.response.TodoResponse;
+import com.ll.restapi.security.CustomUserDetails;
 import com.ll.restapi.service.TodoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,13 +22,15 @@ public class TodoController {
     private final TodoService todoService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<TodoResponse>> create(@Valid @RequestBody TodoCreateRequest request) {
-        TodoResponse response = todoService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(response));
+    public ResponseEntity<ApiResponse<TodoResponse>> create(
+            @Valid @RequestBody TodoCreateRequest request, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        TodoResponse response = todoService.create(request, userDetails.getUsername());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<TodoResponse>>> findAll(){
+    public ResponseEntity<ApiResponse<List<TodoResponse>>> findAll() {
         List<TodoResponse> responses = todoService.findAll();
 
         return ResponseEntity.ok(ApiResponse.success(responses));
@@ -46,8 +50,8 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<TodoResponse>> update( @PathVariable Long id,
-                                                  @Valid @RequestBody TodoUpdateRequest request) {
+    public ResponseEntity<ApiResponse<TodoResponse>> update(@PathVariable Long id,
+                                                            @Valid @RequestBody TodoUpdateRequest request) {
         TodoResponse response = todoService.update(id, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }

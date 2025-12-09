@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 
 public interface TodoService {
-    TodoResponse create(TodoCreateRequest request);
+    TodoResponse create(TodoCreateRequest request, String username);
     List<TodoResponse> findAll();
     TodoResponse findById(Long id);
     void deleteById(Long id);

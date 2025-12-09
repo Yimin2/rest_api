@@ -22,13 +22,17 @@ public class Todo {
     private boolean completed;
     private LocalDateTime createdAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Builder
-    public Todo(Long id, String title, String content) {
+    public Todo(Long id, String title, String content, User user) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.completed = false;
+        this.user = user;
         this.createdAt = LocalDateTime.now();
     }
 
